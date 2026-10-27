@@ -133,4 +133,17 @@ extern "C" char *strchr(char *pchz, int ch)
 JUNK_NOP();
 JUNK_ADDIU(30);
 
-INCLUDE_ASM("asm/nonmatchings/P2/text", UpperizePchz__FPc);
+void UpperizePchz(char *pchz)
+{
+    while (*pchz != '\0')
+    {
+        int ch = *pchz;
+        int chUpper = ch - 0x20;
+        if (!(_ctype_[ch] & 2))
+        {
+            chUpper = ch;
+        }
+        *pchz = chUpper;
+        pchz++;
+    }
+}

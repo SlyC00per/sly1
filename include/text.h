@@ -156,6 +156,8 @@ extern "C"
     char *strchr(char *pchz, int ch);
 }
 
+extern "C" const char _ctype_[];
+
 void UpperizePchz(char *pchz);
 
 #endif // TEXT_H

@@ -4814,6 +4814,9 @@ strchr = 0x1E21D8; // type:func
 junk_001E2210 = 0x1E2210; // type:func
 UpperizePchz__FPc = 0x1E2218; // type:func
 
+// .rodata
+_ctype_ = 0x24E879; // size:0x100
+
 
 ////////////////////////////////////////////////////////////////
 // P2/thread.c
