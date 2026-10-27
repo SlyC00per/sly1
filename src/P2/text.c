@@ -1,3 +1,4 @@
+#include <gcc/math.h>
 #include <text.h>
 #include <memory.h>
 
@@ -15,7 +16,27 @@ INCLUDE_ASM("asm/nonmatchings/P2/text", CchAchFromUl__FPciUlUi);
 
 INCLUDE_ASM("asm/nonmatchings/P2/text", WriteTftUl__FP3TFTP5OSTRMUl);
 
-INCLUDE_ASM("asm/nonmatchings/P2/text", ExpFirstFromG__Fd);
+int ExpFirstFromG(double g)
+{
+    int exp;
+    if (g > 0.0)
+    {
+        double gExp = (double)log10f(g);
+        exp = (int)gExp;
+        if (gExp < 0.0)
+        {
+            if (gExp != (double)exp)
+            {
+                exp--;
+            }
+        }
+    }
+    else
+    {
+        exp = 0;
+    }
+    return exp;
+}
 
 INCLUDE_ASM("asm/nonmatchings/P2/text", ChDigitFromG__Fdii);
 
