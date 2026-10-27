@@ -22,7 +22,8 @@ struct EA;
 struct ASEGA : public BASIC
 {
     /* 0x08 */ ASEG *paseg;
-    /* 0x0c */ STRUCT_PADDING(2);
+    /* 0x0c */ ALO *paloRoot;
+    /* 0x10 */ STRUCT_PADDING(1);
     /* 0x14 */ float tLocal;
     /* 0x18 */ float svtLocal;
     /* 0x1c */ STRUCT_PADDING(2);
@@ -53,6 +54,8 @@ void HandleAsegaEvents(ASEGA *pasega, ASEG *paseg, int *pfRetracted);
 void RemoveAsega(ASEGA *pasega);
 
 void RetractAsega(ASEGA *pasega);
+
+void SubscribeAsegaObject(ASEGA *pasega, LO *plo);
 
 float UFromEaErrorFunc(EA *pea, float s);
 
