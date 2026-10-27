@@ -1,17 +1,17 @@
 # 🦝 Sly Cooper and the Thievius Raccoonus
 
 <!-- Build status shield -->
-[build-url]:https://github.com/TheOnlyZac/sly1/actions/workflows/build.yml
-[build-badge]: https://img.shields.io/github/actions/workflow/status/theonlyzac/sly1/build.yml?branch=main&label=build
+[build-url]:https://github.com/SlyC00per/sly1/actions/workflows/build.yml
+[build-badge]: https://img.shields.io/github/actions/workflow/status/SlyC00per/sly1/build.yml?branch=main&label=build
 
-[decompdev-url]: https://decomp.dev/TheOnlyZac/sly1
-[data-progress-badge]: https://decomp.dev/TheOnlyZac/sly1.svg?mode=shield&label=data&measure=matched_data_percent
+[decompdev-url]: https://decomp.fun/SlyC00per/sly1
+[data-progress-badge]: https://decomp.fun/SlyC00per/sly1.svg?mode=shield&label=data&measure=matched_data_percent
 
-[engine-url]: https://decomp.dev/TheOnlyZac/sly1/SCUS_971.98?category=P2
-[engine-progress-badge]: https://decomp.dev/TheOnlyZac/sly1.svg?mode=shield&category=P2&label=engine&measure=fuzzy_match_percent
+[engine-url]: https://decomp.fun/SlyC00per/sly1/SCUS_971.98?category=P2
+[engine-progress-badge]: https://decomp.fun/SlyC00per/sly1.svg?mode=shield&category=P2&label=engine&measure=fuzzy_match_percent
 
-[splice-url]: https://decomp.dev/TheOnlyZac/sly1/SCUS_971.98?category=splice
-[splice-progress-badge]: https://decomp.dev/TheOnlyZac/sly1.svg?mode=shield&category=splice&label=splice&measure=fuzzy_match_percent
+[splice-url]: https://decomp.fun/SlyC00per/sly1/SCUS_971.98?category=splice
+[splice-progress-badge]: https://decomp.fun/SlyC00per/sly1.svg?mode=shield&category=splice&label=splice&measure=fuzzy_match_percent
 
 <!-- Contributors shield -->
 [contributors-url]: https://github.com/theonlyzac/sly1/graphs/contributors
