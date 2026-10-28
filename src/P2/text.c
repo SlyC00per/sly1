@@ -3,7 +3,28 @@
 #include <memory.h>
 #include <util.h>
 
-INCLUDE_ASM("asm/nonmatchings/P2/text", CchParsePchzInt__FPcPi);
+int CchParsePchzInt(char *pch, int *pn)
+{
+    int nSign = (*pch == '-') ? -1 : 1;
+    int n = 0;
+    int cch = 0;
+    if (nSign == -1)
+    {
+        pch++;
+        cch = 1;
+    }
+
+    while (*pch >= '0' && *pch <= '9')
+    {
+        n = n * 10 - '0';
+        n += *pch;
+        pch++;
+        cch++;
+    }
+
+    *pn = n * nSign;
+    return cch;
+}
 
 INCLUDE_ASM("asm/nonmatchings/P2/text", CchParsePchzTft__FPcP3TFTPPc);
 
