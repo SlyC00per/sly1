@@ -373,7 +373,14 @@ void EnsureLoSidebagClq(LO *plo, OPTID optid, CLQ *pclq)
     RefEnsureOption(plo, optid, &ref);
 }
 
-INCLUDE_ASM("asm/nonmatchings/P2/lo", EnsureLoSidebagLm__FP2LO5OPTIDP2LM);
+void EnsureLoSidebagLm(LO *plo, OPTID optid, LM *plm)
+{
+    CRef ref = CRef();
+    LM *plmNew = PlmNew();
+    *plmNew = *plm;
+    ref.SetLm(plmNew);
+    RefEnsureOption(plo, optid, &ref);
+}
 
 void EnsureLoSidebagOid(LO *plo, OPTID optid, OID oid)
 {
