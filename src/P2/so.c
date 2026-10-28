@@ -341,4 +341,7 @@ INCLUDE_ASM("asm/nonmatchings/P2/so", FUN_001bc670);
 
 INCLUDE_ASM("asm/nonmatchings/P2/so", FUN_001bc710);
 
-INCLUDE_ASM("asm/nonmatchings/P2/so", FUN_001bc748);
+void FUN_001bc748(SO *pso, int *pf)
+{
+    *pf = (int)((unsigned long long)STRUCT_OFFSET(pso, 0x538, unsigned long long) >> 0x34) & 1;
+}

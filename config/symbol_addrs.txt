@@ -4105,7 +4105,7 @@ CloneSoPhys__FP2SOT0i                                  = 0x1BC368; // type:func
 FUN_001bc4d8                                           = 0x1BC4D8; // type:func
 FUN_001bc670                                           = 0x1BC670; // type:func
 FUN_001bc710                                           = 0x1BC710; // type:func
-FUN_001bc748                                           = 0x1BC748; // type:func
+FUN_001bc748__FP2SOPi                                    = 0x1BC748; // type:func
 
 
 ////////////////////////////////////////////////////////////////
