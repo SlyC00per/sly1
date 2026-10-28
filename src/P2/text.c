@@ -1,4 +1,5 @@
 #include <gcc/math.h>
+#include <sce/memset.h>
 #include <text.h>
 #include <memory.h>
 #include <util.h>
@@ -26,7 +27,159 @@ int CchParsePchzInt(char *pch, int *pn)
     return cch;
 }
 
-INCLUDE_ASM("asm/nonmatchings/P2/text", CchParsePchzTft__FPcP3TFTPPc);
+int CchParsePchzTft(char *pchzFormat, TFT *ptft, va_list *pval)
+{
+    TFTS tfts = TFTS_Percent;
+    memset(ptft, 0, sizeof(TFT));
+    char *pch = pchzFormat;
+
+    while (*pch != '\0' && tfts != TFTS_Done)
+    {
+        int cchAdvance = 0;
+        TFTS tftsNew = tfts;
+
+        switch (tfts)
+        {
+        case TFTS_Percent:
+            if (*pch != '%')
+            {
+                tftsNew = TFTS_Done;
+            }
+            else if (pch[1] == '%')
+            {
+                ptft->chConversion = '%';
+                tftsNew = TFTS_Done;
+                cchAdvance = 2;
+            }
+            else
+            {
+                tftsNew = TFTS_Flags;
+                cchAdvance = 1;
+            }
+            break;
+
+        case TFTS_Flags:
+            switch (*pch)
+            {
+            case '-':
+                ptft->fMinus = 1;
+                cchAdvance = 1;
+                break;
+            case '+':
+                ptft->fPlus = 1;
+                cchAdvance = 1;
+                break;
+            case ' ':
+                ptft->fSpace = 1;
+                cchAdvance = 1;
+                break;
+            case '#':
+                ptft->fHash = 1;
+                cchAdvance = 1;
+                break;
+            case '0':
+                ptft->fZero = 1;
+                cchAdvance = 1;
+                break;
+            default:
+                tftsNew = TFTS_Width;
+                break;
+            }
+            break;
+
+        case TFTS_Width:
+            if (*pch == '*')
+            {
+                ptft->cchWidth = va_arg(*pval, int);
+                if (ptft->cchWidth < 0)
+                {
+                    ptft->fMinus = 1;
+                    ptft->cchWidth = ABS(ptft->cchWidth);
+                }
+                cchAdvance = 1;
+            }
+            else
+            {
+                cchAdvance = CchParsePchzInt(pch, &ptft->cchWidth);
+            }
+
+            if (pch[cchAdvance] == '.')
+            {
+                tftsNew = TFTS_Precision;
+                cchAdvance++;
+            }
+            else
+            {
+                tftsNew = TFTS_Type;
+            }
+            break;
+
+        case TFTS_Precision:
+            if (*pch == '*')
+            {
+                cchAdvance = 1;
+                ptft->cchPrecision = va_arg(*pval, int);
+                ptft->cchPrecision = ABS(ptft->cchPrecision);
+            }
+            else
+            {
+                cchAdvance = CchParsePchzInt(pch, &ptft->cchPrecision);
+            }
+            ptft->fZeroPrecision = (ptft->cchPrecision == 0);
+            tftsNew = TFTS_Type;
+            break;
+
+        case TFTS_Type:
+            switch (*pch)
+            {
+            case 'h':
+                ptft->tfvw = TFVW_16;
+                cchAdvance = 1;
+                break;
+            case 'l':
+                cchAdvance = 1;
+                if (pch[1] != 'l')
+                {
+                    ptft->tfvw = TFVW_64;
+                    break;
+                }
+            case 'L':
+            case 'q':
+                ptft->tfvw = TFVW_64;
+                cchAdvance++;
+                break;
+            case 'M':
+            case 'V':
+            case 'm':
+            case 'v':
+                ptft->cCol = isupper(*pch) ? 4 : 3;
+                ptft->cRow = (tolower(*pch) == 'v') ? 1 : ptft->cCol;
+                cchAdvance = 1;
+                break;
+            }
+            tftsNew = TFTS_Conversion;
+            break;
+
+        case TFTS_Conversion:
+            if (*pch != '%')
+            {
+                ptft->fUpperize = isupper(*pch);
+                ptft->chConversion = tolower(*pch);
+            }
+            cchAdvance = 1;
+            tftsNew = TFTS_Done;
+            break;
+
+        default:
+            return pch - pchzFormat;
+        }
+
+        pch += cchAdvance;
+        tfts = tftsNew;
+    }
+
+    return pch - pchzFormat;
+}
 
 static inline void WriteOstrmChPad(OSTRM *postrm, char ch, int cchPad)
 {

@@ -93,7 +93,7 @@ struct TFT
 extern char s_achzNumerals[];
 
 int CchParsePchzInt(char *pch, int *pn);
-int CchParsePchzTft(char *pchzFormat, TFT *ptft, char **pval);
+int CchParsePchzTft(char *pchzFormat, TFT *ptft, va_list *pval);
 void WriteTftPchz(TFT *ptft, OSTRM *postrm, char *pchz);
 int FNegTftUl(TFT *ptft, UL *pul);
 uint UnRadixFromChConversion(char chConversion);
@@ -184,7 +184,22 @@ extern "C"
     char *strchr(char *pchz, int ch);
 }
 
+#define _U 01
+#define _L 02
+#define _N 04
+#define _S 010
+#define _P 020
+#define _C 040
+#define _X 0100
+#define _B 0200
+
 extern "C" const char _ctype_[];
+
+#define isupper(c) (_ctype_[(int)(c)] & _U)
+#define islower(c) (_ctype_[(int)(c)] & _L)
+#define isdigit(c) (_ctype_[(int)(c)] & _N)
+#define tolower(c) __extension__({ int __x = (c); isupper(__x) ? (__x - 'A' + 'a') : __x; })
+#define toupper(c) __extension__({ int __x = (c); islower(__x) ? (__x - 'a' + 'A') : __x; })
 
 void UpperizePchz(char *pchz);
 
