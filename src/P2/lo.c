@@ -389,18 +389,11 @@ void EnsureLoSidebagOid(LO *plo, OPTID optid, OID oid)
     RefEnsureOption(plo, optid, &ref);
 }
 
-/**
- * @todo 92.29% match.
- * https://decomp.me/scratch/uhZNV
- */
-INCLUDE_ASM("asm/nonmatchings/P2/lo", EnsureLoSidebagVector__FP2LO5OPTIDP6VECTOR);
-#ifdef SKIP_ASM
 void EnsureLoSidebagVector(LO *plo, OPTID optid, VECTOR *pvec)
 {
     CRef ref = CRef();
     VECTOR *pvector = PvectorNew();
-    *pvector = *pvec;
+    *(qword *)pvector = *(qword *)pvec;
     ref.SetVector(pvector);
     RefEnsureOption(plo, optid, &ref);
 }
-#endif // SKIP_ASM
