@@ -585,7 +585,48 @@ void WriteTft(TFT *ptft, OSTRM *postrm, va_list *pval, char *pch, int cch)
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/P2/text", CchOstrmPrintf__FP5OSTRMPcT1);
+int CchOstrmPrintf(OSTRM *postrm, char *pchzFormat, va_list val)
+{
+    TFT tft;
+    char *pchMic = pchzFormat;
+
+    if (*pchMic != ' ')
+    {
+        do
+        {
+            char *pchMac = strchr(pchMic, '%');
+            int cch;
+            if (pchMac != NULL)
+            {
+                cch = pchMac - pchMic;
+            }
+            else
+            {
+                cch = strlen(pchMic);
+                pchMac = pchMic + cch;
+            }
+
+            if (cch != 0)
+            {
+                if (postrm->CbWrite(pchMic, cch) < cch)
+                {
+                    break;
+                }
+                pchMic = pchMac;
+            }
+
+            if (*pchMic == '%')
+            {
+                cch = CchParsePchzTft(pchMic, &tft, &val);
+                WriteTft(&tft, postrm, &val, pchMic, cch);
+                pchMic += cch;
+            }
+        } while (*pchMic != ' ');
+    }
+
+    postrm->Flush();
+    return postrm->CbWritten();
+}
 
 extern "C" int vprintf(char *pchzFormat, va_list val)
 {
