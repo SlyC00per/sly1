@@ -102,6 +102,18 @@ public:
     void SetSmp(SMP *psmp);
     void SetBasic(BASIC *pbasic);
     void SetMethod(CMethod *pmethod);
+    BASIC *PbasicGet()
+    {
+        return m_tag.m_pbasic;
+    }
+    CProc *PprocGet()
+    {
+        return m_tag.m_pproc;
+    }
+    uint SymidGet()
+    {
+        return m_tag.m_symid;
+    }
     int RefCoerceS32() const;
     float RefCoerceF32() const;
 };

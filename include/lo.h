@@ -34,7 +34,38 @@ enum OPTID
  */
 enum SYMEVID
 {
-    SYMEVID_Nil = -1
+    SYMEVID_Nil = -1,
+    SYMEVID_OnPostLoad = 0,
+    SYMEVID_OnUpdate = 1,
+    SYMEVID_OnTrigger = 2,
+    SYMEVID_OnUntrigger = 3,
+    SYMEVID_OnAdd = 4,
+    SYMEVID_OnRemove = 5,
+    SYMEVID_OnTouch = 6,
+    SYMEVID_OnUntouch = 7,
+    SYMEVID_OnDeath = 8,
+    SYMEVID_OnApply = 9,
+    SYMEVID_OnFrame = 10,
+    SYMEVID_OnRetract = 11,
+    SYMEVID_OnContentsChange = 12,
+    SYMEVID_OnFire = 13,
+    SYMEVID_OnEnterState = 14,
+    SYMEVID_OnEnterStepGuardState = 15,
+    SYMEVID_OnDialogLabel = 16,
+    SYMEVID_OnApplySm = 17,
+    SYMEVID_OnRetractSm = 18,
+    SYMEVID_OnBasketDamage = 19,
+    SYMEVID_OnBreakDamage = 20,
+    SYMEVID_OnRetractDialog = 21,
+    SYMEVID_OnRestore = 22,
+    SYMEVID_OnScriptApply = 23,
+    SYMEVID_OnScriptLabel = 24,
+    SYMEVID_OnScriptRetract = 25,
+    SYMEVID_OnEnterVault = 26,
+    SYMEVID_OnTumblerMatch = 27,
+    SYMEVID_OnVaultOpen = 28,
+    SYMEVID_OnEncrypted = 29,
+    SYMEVID_Max = 30
 };
 
 /**

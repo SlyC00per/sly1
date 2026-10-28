@@ -9,7 +9,10 @@
 #include <spliceobj.h>
 #include <splice/gc.h>
 #include <splice/frame.h>
+#include <splice/proc.h>
+#include <splice/pair.h>
 #include <splice/ref.h>
+#include <splice/eval.h>
 #include <splice/vecmat.h>
 #include <splice/sidebag.h>
 
@@ -338,7 +341,40 @@ void GetLoOidProxy(LO *plo, OID *poid)
     *poid = OidProxyLo(plo);
 }
 
-INCLUDE_ASM("asm/nonmatchings/P2/lo", PostSpliceEventCallback__FP2LOUiPv);
+void PostSpliceEventCallback(LO *plo, uint symidEvent, void *pvarg)
+{
+    CRef refProc;
+    CRef refArg;
+    CRef refRet;
+
+    g_gc.UpdateRecyclable();
+
+    if (!plo->pframe->FFindBinding(symidEvent, 1, &refProc))
+    {
+        return;
+    }
+
+    CProc *pproc = refProc.PprocGet();
+    CFrame *pframe = PframeNew();
+    pframe->SetSingleParent(pproc->m_pframe);
+
+    refArg.SetBasic((BASIC *)plo);
+    refRet = pframe->RefAddBinding(pproc->m_ppair->m_ref.SymidGet(), &refArg);
+
+    if (pvarg != NULL)
+    {
+        CPair *ppairArg = (CPair *)pvarg;
+        CPair *ppairFormal = pproc->m_ppair->m_ppairNext;
+        while (ppairArg != NULL)
+        {
+            refRet = pframe->RefAddBinding(ppairFormal->m_ref.SymidGet(), &ppairArg->m_ref);
+            ppairArg = ppairArg->m_ppairNext;
+            ppairFormal = ppairFormal->m_ppairNext;
+        }
+    }
+
+    refRet = RefEvalLambdaBody(pproc->m_ppairCodeExpr, pframe);
+}
 
 INCLUDE_ASM("asm/nonmatchings/P2/lo", FFilterSpliceEvent__FP2LO7SYMEVIDiPPv);
 
