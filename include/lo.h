@@ -30,6 +30,14 @@ enum OPTID
 };
 
 /**
+ * @brief Splice event ID.
+ */
+enum SYMEVID
+{
+    SYMEVID_Nil = -1
+};
+
+/**
  * @class LO
  * @brief Live Object, base class for all objects that exist in the world.
  *
@@ -202,9 +210,12 @@ void GetLoOidProxy(LO *plo, OID *poid);
  */
 void PostSpliceEventCallback(LO *plo, uint symidEvent, void *pvarg);
 
-int FFilterSpliceEvent(LO *plo, /* SYMEVID */ int symevid, int cargs, void **ppvargs);
+int FFilterSpliceEvent(LO *plo, SYMEVID symevid, int cargs, void **ppvargs);
 
 void HandleLoSpliceEvent(LO *plo, uint symidEvent, int cargs, void **ppvargs);
+
+extern const int g_aotypSpliceEvent[];
+extern const int g_mpsymevidiotyp[];
 
 void EnsureLoSidebagBool(LO *plo, OPTID optid, int f);
 

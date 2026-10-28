@@ -8,6 +8,7 @@
 #include <memory.h>
 #include <spliceobj.h>
 #include <splice/gc.h>
+#include <splice/frame.h>
 #include <splice/ref.h>
 #include <splice/vecmat.h>
 #include <splice/sidebag.h>
@@ -341,7 +342,33 @@ INCLUDE_ASM("asm/nonmatchings/P2/lo", PostSpliceEventCallback__FP2LOUiPv);
 
 INCLUDE_ASM("asm/nonmatchings/P2/lo", FFilterSpliceEvent__FP2LO7SYMEVIDiPPv);
 
-INCLUDE_ASM("asm/nonmatchings/P2/lo", HandleLoSpliceEvent__FP2LOUiiPPv);
+void HandleLoSpliceEvent(LO *plo, uint symidEvent, int cargs, void **ppvargs)
+{
+    CRef ref;
+
+    if (plo->pframe == NULL || !plo->pframe->FFindBinding(symidEvent, 1, &ref))
+    {
+        return;
+    }
+
+    g_gc.UpdateRecyclable();
+
+    if (!FFilterSpliceEvent(plo, (SYMEVID)symidEvent, cargs, ppvargs))
+    {
+        void *pvarg;
+        if (cargs != 0)
+        {
+            ref = RefSetArgListFromPvs(cargs, (OTYP *)g_aotypSpliceEvent + g_mpsymevidiotyp[symidEvent], ppvargs);
+            pvarg = ref.m_tag.m_ppair;
+        }
+        else
+        {
+            pvarg = NULL;
+        }
+
+        PostSwCallback(plo->psw, (PFNMQ)PostSpliceEventCallback, plo, (MSGID)symidEvent, pvarg);
+    }
+}
 
 void EnsureLoSidebagBool(LO *plo, OPTID optid, int f)
 {
