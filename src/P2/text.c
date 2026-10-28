@@ -7,7 +7,55 @@ INCLUDE_ASM("asm/nonmatchings/P2/text", CchParsePchzInt__FPcPi);
 
 INCLUDE_ASM("asm/nonmatchings/P2/text", CchParsePchzTft__FPcP3TFTPPc);
 
-INCLUDE_ASM("asm/nonmatchings/P2/text", WriteTftPchz__FP3TFTP5OSTRMPc);
+static inline void WriteOstrmChPad(OSTRM *postrm, char ch, int cchPad)
+{
+    while (cchPad-- > 0)
+    {
+        if (postrm->CbWrite(&ch, 1) != 1)
+        {
+            break;
+        }
+    }
+}
+
+void WriteTftPchz(TFT *ptft, OSTRM *postrm, char *pchz)
+{
+    if (pchz == NULL)
+    {
+        pchz = "(null)";
+    }
+
+    char chPad;
+    int cchWrite = strlen(pchz);
+    int cchLeftPad = 0;
+    int cchRightPad = 0;
+    if (ptft->cchPrecision != 0 && ptft->cchPrecision < cchWrite)
+    {
+        cchWrite = ptft->cchPrecision;
+    }
+    else if (ptft->fZeroPrecision != 0)
+    {
+        cchWrite = 0;
+    }
+
+    if (cchWrite < ptft->cchWidth)
+    {
+        chPad = ptft->fZero != 0 ? '0' : ' ';
+        int cchPad = ptft->cchWidth - cchWrite;
+        if (ptft->fMinus != 0)
+        {
+            cchRightPad = cchPad;
+        }
+        else
+        {
+            cchLeftPad = cchPad;
+        }
+    }
+
+    WriteOstrmChPad(postrm, chPad, cchLeftPad);
+    postrm->CbWrite(pchz, cchWrite);
+    WriteOstrmChPad(postrm, ' ', cchRightPad);
+}
 
 int FNegTftUl(TFT *ptft, UL *pul)
 {
@@ -58,14 +106,7 @@ int FNegTftUl(TFT *ptft, UL *pul)
 
 __asm__(
     ".section .rodata\n\t"
-    "nonmatching D_0024E2E0\n\t"
-    "\n\t"
-    "dlabel D_0024E2E0\n\t"
-    "    .word 0x6C756E28\n\t"
-    "    .word 0x0000296C\n\t"
-    "    .word 0x00000000\n\t"
-    "    .word 0x00000000\n\t"
-    "enddlabel D_0024E2E0\n\t"
+    ".align 4\n\t"
     ".section .text\n\t"
 );
 
