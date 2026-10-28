@@ -18,6 +18,7 @@ extern "C"
     float fmodf(float x, float y);
     float sqrtf(float x);
     float log10f(float x);
+    float powf(float x, float y);
 }
 
 #endif // MATH_H

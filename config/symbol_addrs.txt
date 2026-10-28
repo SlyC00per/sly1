@@ -5376,6 +5376,8 @@ __floatdisf = 0x1fb6b0; // type:func
 ////////////////////////////////////////////////////////////////
 // /usr/local/sce/ee/gcc/build/gcc/dp-bit.c
 ////////////////////////////////////////////////////////////////
+dpsub = 0x1FCD78; // type:func
+dpmul = 0x1FCDE0; // type:func
 dpcmp = 0x1FD308; // type:func
 litodp = 0x1FD358; // type:func
 dptoli = 0x1FD410; // type:func
@@ -5482,6 +5484,7 @@ fmodf = 0x2058a0; // type:func
 ////////////////////////////////////////////////////////////////
 logf = 0x2059e0; // type:func
 log10f = 0x205b28; // type:func
+powf = 0x205c78; // type:func
 
 
 ////////////////////////////////////////////////////////////////
@@ -5515,3 +5518,6 @@ s_cpdialogCalling = 0x261D38; // size:0x4
 g_call = 0x26F5A0; // size:0x264
 g_tvLeft = 0x2708E0; // size:0xC78
 g_tvRight = 0x271558; // size:0xC78
+
+// P2/text.c
+s_achzNumerals = 0x275940; // size:0x18

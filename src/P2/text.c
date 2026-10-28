@@ -1,6 +1,7 @@
 #include <gcc/math.h>
 #include <text.h>
 #include <memory.h>
+#include <util.h>
 
 INCLUDE_ASM("asm/nonmatchings/P2/text", CchParsePchzInt__FPcPi);
 
@@ -10,7 +11,67 @@ INCLUDE_ASM("asm/nonmatchings/P2/text", WriteTftPchz__FP3TFTP5OSTRMPc);
 
 INCLUDE_ASM("asm/nonmatchings/P2/text", FNegTftUl__FP3TFTP2UL);
 
+__asm__(
+    ".section .rodata\n\t"
+    "nonmatching D_0024E2E0\n\t"
+    "\n\t"
+    "dlabel D_0024E2E0\n\t"
+    "    .word 0x6C756E28\n\t"
+    "    .word 0x0000296C\n\t"
+    "    .word 0x00000000\n\t"
+    "    .word 0x00000000\n\t"
+    "enddlabel D_0024E2E0\n\t"
+    ".section .text\n\t"
+);
+
 INCLUDE_ASM("asm/nonmatchings/P2/text", UnRadixFromChConversion__Fc);
+
+__asm__(
+    ".section .rodata\n\t"
+    ".align 3\n\t"
+    "nonmatching D_0024E3D0\n\t"
+    "\n\t"
+    "dlabel D_0024E3D0\n\t"
+    "    .word 0x0000002D\n\t"
+    "    .word 0x00000000\n\t"
+    "enddlabel D_0024E3D0\n\t"
+    "\n\t"
+    "nonmatching D_0024E3D8\n\t"
+    "\n\t"
+    "dlabel D_0024E3D8\n\t"
+    "    .word 0x0000002B\n\t"
+    "    .word 0x00000000\n\t"
+    "enddlabel D_0024E3D8\n\t"
+    "\n\t"
+    "nonmatching D_0024E3E0\n\t"
+    "\n\t"
+    "dlabel D_0024E3E0\n\t"
+    "    .word 0x00000020\n\t"
+    "    .word 0x00000000\n\t"
+    "enddlabel D_0024E3E0\n\t"
+    "\n\t"
+    "nonmatching D_0024E3E8\n\t"
+    "\n\t"
+    "dlabel D_0024E3E8\n\t"
+    "    .word 0x00006230\n\t"
+    "    .word 0x00000000\n\t"
+    "enddlabel D_0024E3E8\n\t"
+    "\n\t"
+    "nonmatching D_0024E3F0\n\t"
+    "\n\t"
+    "dlabel D_0024E3F0\n\t"
+    "    .word 0x00000030\n\t"
+    "    .word 0x00000000\n\t"
+    "enddlabel D_0024E3F0\n\t"
+    "\n\t"
+    "nonmatching D_0024E3F8\n\t"
+    "\n\t"
+    "dlabel D_0024E3F8\n\t"
+    "    .word 0x00007830\n\t"
+    "    .word 0x00000000\n\t"
+    "enddlabel D_0024E3F8\n\t"
+    ".section .text\n\t"
+);
 
 INCLUDE_ASM("asm/nonmatchings/P2/text", CchAchFromUl__FPciUlUi);
 
@@ -38,11 +99,77 @@ int ExpFirstFromG(double g)
     return exp;
 }
 
-INCLUDE_ASM("asm/nonmatchings/P2/text", ChDigitFromG__Fdii);
+char ChDigitFromG(double g, int expFirst, int exp)
+{
+    int digit;
+    if (exp > expFirst || exp <= expFirst - 15)
+    {
+        digit = 0;
+    }
+    else
+    {
+        double gScaled = GTrunc(g * (double)powf(10.0f, (float)-exp));
+        digit = (int)(gScaled - GTrunc(gScaled * 0.1) * 10.0);
+    }
+    return s_achzNumerals[digit];
+}
 
 INCLUDE_ASM("asm/nonmatchings/P2/text", CchAchFromDouble__FPciP3TFTd);
 
 INCLUDE_ASM("asm/nonmatchings/P2/text", WriteTftDouble__FP3TFTP5OSTRMd);
+
+__asm__(
+    ".section .rodata\n\t"
+    "nonmatching D_0024E468\n\t"
+    "\n\t"
+    "dlabel D_0024E468\n\t"
+    "    .word 0x6E616E28\n\t"
+    "    .word 0x00000029\n\t"
+    "enddlabel D_0024E468\n\t"
+    "\n\t"
+    "nonmatching D_0024E470\n\t"
+    "\n\t"
+    "dlabel D_0024E470\n\t"
+    "    .word 0x666E6928\n\t"
+    "    .word 0x00000029\n\t"
+    "enddlabel D_0024E470\n\t"
+    "\n\t"
+    "nonmatching D_0024E478\n\t"
+    "\n\t"
+    "dlabel D_0024E478\n\t"
+    "    .word 0x0000000A\n\t"
+    "    .word 0x00000000\n\t"
+    "enddlabel D_0024E478\n\t"
+    "\n\t"
+    "nonmatching D_0024E480\n\t"
+    "\n\t"
+    "dlabel D_0024E480\n\t"
+    "    .word 0x00000A2C\n\t"
+    "    .word 0x00000000\n\t"
+    "enddlabel D_0024E480\n\t"
+    "\n\t"
+    "nonmatching D_0024E488\n\t"
+    "\n\t"
+    "dlabel D_0024E488\n\t"
+    "    .word 0x0000207B\n\t"
+    "    .word 0x00000000\n\t"
+    "enddlabel D_0024E488\n\t"
+    "\n\t"
+    "nonmatching D_0024E490\n\t"
+    "\n\t"
+    "dlabel D_0024E490\n\t"
+    "    .word 0x0000202C\n\t"
+    "    .word 0x00000000\n\t"
+    "enddlabel D_0024E490\n\t"
+    "\n\t"
+    "nonmatching D_0024E498\n\t"
+    "\n\t"
+    "dlabel D_0024E498\n\t"
+    "    .word 0x00007D20\n\t"
+    "    .word 0x00000000\n\t"
+    "enddlabel D_0024E498\n\t"
+    ".section .text\n\t"
+);
 
 INCLUDE_ASM("asm/nonmatchings/P2/text", WriteTft__FP3TFTP5OSTRMPPcPci);
 

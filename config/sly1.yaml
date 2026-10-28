@@ -372,8 +372,8 @@ segments:
     #- [0x14ec98, .rodata, P2/sw]
     #- [0x14eca8, .rodata, P2/tank] # Right after is a bunch of seemingly unused developer names?
     #- [0x14f140, .rodata, P2/tatk]
-    #- [0x14f1c0, .rodata, P2/text]
-    #- [0x14f5f0, .rodata, P2/tn]
+    - [0x14f1c0, .rodata, P2/text]
+    - [0x14f5f0, rodata] #, P2/tn]
     - [0x14f600, .rodata, P2/ub]
     - [0x14f670, .rodata, P2/ui]
     - [0x14f6d0, rodata] #, P2/vb]

@@ -64,6 +64,8 @@ struct TFT
     int fUpperize;
 };
 
+extern char s_achzNumerals[];
+
 int CchParsePchzInt(char *pch, int *pn);
 int CchParsePchzTft(char *pchzFormat, TFT *ptft, char **pval);
 void WriteTftPchz(TFT *ptft, OSTRM *postrm, char *pchz);
@@ -72,7 +74,7 @@ uint UnRadixFromChConversion(char chConversion);
 int CchAchFromUl(char *achDest, int cchDest, ulong ul, uint unRadix);
 void WriteTftUl(TFT *ptft, OSTRM *postrm, ulong ul);
 int ExpFirstFromG(double g);
-char ChDigitFromG(long g, int expFirst, int exp);
+char ChDigitFromG(double g, int expFirst, int exp);
 int CchAchFromDouble(char *achDest, int cchDest, TFT *ptft, long g);
 void WriteTftDouble(TFT *ptft, OSTRM *postrm, long g);
 void WriteTft(TFT *ptft, OSTRM *postrm, char **pval, ulong param_4, ulong param_5, undefined8 param_6, double param_7);
