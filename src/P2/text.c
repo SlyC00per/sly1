@@ -18,6 +18,11 @@ static inline void WriteOstrmChPad(OSTRM *postrm, char ch, int cchPad)
     }
 }
 
+static inline void WriteOstrmPchz(OSTRM *postrm, char *pchz)
+{
+    postrm->CbWrite(pchz, strlen(pchz));
+}
+
 void WriteTftPchz(TFT *ptft, OSTRM *postrm, char *pchz)
 {
     if (pchz == NULL)
@@ -465,47 +470,120 @@ void WriteTftDouble(TFT *ptft, OSTRM *postrm, double g)
     WriteOstrmChPad(postrm, ' ', cchRightPad);
 }
 
-__asm__(
-    ".section .rodata\n\t"
-    ".align 3\n\t"
-    "nonmatching D_0024E478\n\t"
-    "\n\t"
-    "dlabel D_0024E478\n\t"
-    "    .word 0x0000000A\n\t"
-    "    .word 0x00000000\n\t"
-    "enddlabel D_0024E478\n\t"
-    "\n\t"
-    "nonmatching D_0024E480\n\t"
-    "\n\t"
-    "dlabel D_0024E480\n\t"
-    "    .word 0x00000A2C\n\t"
-    "    .word 0x00000000\n\t"
-    "enddlabel D_0024E480\n\t"
-    "\n\t"
-    "nonmatching D_0024E488\n\t"
-    "\n\t"
-    "dlabel D_0024E488\n\t"
-    "    .word 0x0000207B\n\t"
-    "    .word 0x00000000\n\t"
-    "enddlabel D_0024E488\n\t"
-    "\n\t"
-    "nonmatching D_0024E490\n\t"
-    "\n\t"
-    "dlabel D_0024E490\n\t"
-    "    .word 0x0000202C\n\t"
-    "    .word 0x00000000\n\t"
-    "enddlabel D_0024E490\n\t"
-    "\n\t"
-    "nonmatching D_0024E498\n\t"
-    "\n\t"
-    "dlabel D_0024E498\n\t"
-    "    .word 0x00007D20\n\t"
-    "    .word 0x00000000\n\t"
-    "enddlabel D_0024E498\n\t"
-    ".section .text\n\t"
-);
+void WriteTft(TFT *ptft, OSTRM *postrm, va_list *pval, char *pch, int cch)
+{
+    unsigned long ul;
+    int iRow;
+    int iCol;
 
-INCLUDE_ASM("asm/nonmatchings/P2/text", WriteTft__FP3TFTP5OSTRMPPcPci);
+    switch (ptft->chConversion)
+    {
+    case '%':
+        postrm->CbWrite(&ptft->chConversion, 1);
+        break;
+    case 'c':
+    {
+        char ch = va_arg(*pval, char);
+        postrm->CbWrite(&ch, 1);
+        break;
+    }
+    case 's':
+        WriteTftPchz(ptft, postrm, va_arg(*pval, char *));
+        break;
+    case 'p':
+        ptft->cchPrecision = 8;
+        ptft->chConversion = 'x';
+        ptft->tfvw = TFVW_32;
+    case 'b':
+    case 'd':
+    case 'i':
+    case 'o':
+    case 'u':
+    case 'x':
+    {
+        switch (ptft->tfvw)
+        {
+        case TFVW_32:
+        case TFVW_16:
+            ul = va_arg(*pval, uint);
+            break;
+        case TFVW_64:
+            ul = va_arg(*pval, unsigned long);
+            break;
+        }
+        WriteTftUl(ptft, postrm, ul);
+        break;
+    }
+    case 'e':
+    case 'f':
+    case 'g':
+        if (ptft->cCol != 0)
+        {
+            float *ag = va_arg(*pval, float *);
+            char *pchzNl = "\n";
+            char *pchzRowSep = ",\n";
+            char *pchzRowBegin = "{ ";
+            char *pchzColSep = ", ";
+            char *pchzRowEnd = " }";
+            if (ptft->cRow >= 2)
+            {
+                WriteOstrmPchz(postrm, pchzNl);
+            }
+            for (iRow = 0; iRow < ptft->cRow; iRow++)
+            {
+                if (iRow != 0)
+                {
+                    WriteOstrmPchz(postrm, pchzRowSep);
+                }
+                WriteOstrmPchz(postrm, pchzRowBegin);
+                for (iCol = 0; iCol < ptft->cCol; iCol++)
+                {
+                    if (iCol != 0)
+                    {
+                        WriteOstrmPchz(postrm, pchzColSep);
+                    }
+                    WriteTftDouble(ptft, postrm, *ag++);
+                }
+                WriteOstrmPchz(postrm, pchzRowEnd);
+            }
+            if (ptft->cRow >= 2)
+            {
+                WriteOstrmPchz(postrm, pchzNl);
+            }
+        }
+        else
+        {
+            WriteTftDouble(ptft, postrm, va_arg(*pval, double));
+        }
+        break;
+    case 'n':
+        switch (ptft->tfvw)
+        {
+        case TFVW_32:
+        {
+            int *pn = va_arg(*pval, int *);
+            *pn = postrm->CbWritten();
+            break;
+        }
+        case TFVW_16:
+        {
+            short *pw = va_arg(*pval, short *);
+            *pw = postrm->CbWritten();
+            break;
+        }
+        case TFVW_64:
+        {
+            long *pl = va_arg(*pval, long *);
+            *pl = postrm->CbWritten();
+            break;
+        }
+        }
+        break;
+    default:
+        postrm->CbWrite(pch, cch);
+        break;
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/P2/text", CchOstrmPrintf__FP5OSTRMPcT1);
 

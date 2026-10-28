@@ -103,7 +103,7 @@ int ExpFirstFromG(double g);
 char ChDigitFromG(double g, int expFirst, int exp);
 int CchAchFromDouble(char *achDest, int cchDest, TFT *ptft, double g);
 void WriteTftDouble(TFT *ptft, OSTRM *postrm, double g);
-void WriteTft(TFT *ptft, OSTRM *postrm, char **pval, ulong param_4, ulong param_5, undefined8 param_6, double param_7);
+void WriteTft(TFT *ptft, OSTRM *postrm, va_list *pval, char *pch, int cch);
 int CchOstrmPrintf(OSTRM *postrm, char *pchzFormat, va_list val);
 
 extern "C"
@@ -161,7 +161,7 @@ extern "C"
      *
      * @param pchz The string to count.
      */
-    //uint strlen(char *pchz); // conflicts with built-in strlen
+    uint strlen(const char *pchz);
 
     /**
      * @brief Copy a string.
@@ -169,7 +169,7 @@ extern "C"
      * @param pchzDst The destination string.
      * @param pchzSrc The source string.
      */
-    //char *strcpy(char *pchzDst, char *pchzSrc); // conflicts with built-in strcpy
+    char *strcpy(char *pchzDst, const char *pchzSrc);
 
     char *strcpy1(char *pchzDst, char *pchzSrc);
 

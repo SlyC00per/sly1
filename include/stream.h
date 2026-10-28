@@ -41,6 +41,11 @@ struct OSTRM
     int CbWrite(void *ab, int cb);
 
     void Flush();
+
+    int CbWritten()
+    {
+        return m_cbWritten;
+    }
 };
 
 #endif // STREAM_H
