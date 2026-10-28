@@ -16,7 +16,7 @@ permissions:
 jobs:
   # Trusted: the code being built is already on main.
   build-main:
-    if: github.event_name == 'push' && github.repository_owner == 'theonlyzac'
+    if: github.event_name == 'push' && github.repository_owner == 'slyc00per'
     runs-on: ubuntu-latest
 
     steps:
@@ -37,7 +37,7 @@ jobs:
   # this until a maintainer approves the run, which is tied to the head SHA, so
   # every push to the PR is re-approved.
   build-pr:
-    if: github.event_name == 'pull_request_target' && github.repository_owner == 'theonlyzac'
+    if: github.event_name == 'pull_request_target' && github.repository_owner == 'slyc00per'
     runs-on: ubuntu-latest
     environment: pr-build
     concurrency:
