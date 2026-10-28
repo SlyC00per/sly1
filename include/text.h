@@ -47,6 +47,32 @@ enum TFTS
  *
  * @note Based on may proto.
  */
+union UL
+{
+    ulong ul;
+    struct
+    {
+        uint un;
+        uint unUnused;
+    };
+    struct
+    {
+        ushort uw;
+        ushort uwUnused[3];
+    };
+    int64_t l;
+    struct
+    {
+        int n;
+        int nUnused;
+    };
+    struct
+    {
+        short w;
+        short wUnused[3];
+    };
+};
+
 struct TFT
 {
     int fMinus;
@@ -69,7 +95,7 @@ extern char s_achzNumerals[];
 int CchParsePchzInt(char *pch, int *pn);
 int CchParsePchzTft(char *pchzFormat, TFT *ptft, char **pval);
 void WriteTftPchz(TFT *ptft, OSTRM *postrm, char *pchz);
-int FNegTftUl(TFT *ptft, union UL *pul); // todo: define type of pul
+int FNegTftUl(TFT *ptft, UL *pul);
 uint UnRadixFromChConversion(char chConversion);
 int CchAchFromUl(char *achDest, int cchDest, unsigned long ul, uint unRadix);
 void WriteTftUl(TFT *ptft, OSTRM *postrm, ulong ul);

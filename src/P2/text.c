@@ -9,7 +9,52 @@ INCLUDE_ASM("asm/nonmatchings/P2/text", CchParsePchzTft__FPcP3TFTPPc);
 
 INCLUDE_ASM("asm/nonmatchings/P2/text", WriteTftPchz__FP3TFTP5OSTRMPc);
 
-INCLUDE_ASM("asm/nonmatchings/P2/text", FNegTftUl__FP3TFTP2UL);
+int FNegTftUl(TFT *ptft, UL *pul)
+{
+    int fNeg = 0;
+
+    switch (ptft->tfvw)
+    {
+    case TFVW_32:
+        pul->unUnused = 0;
+        break;
+    case TFVW_16:
+        pul->ul = pul->uw;
+        break;
+    case TFVW_64:
+        break;
+    }
+
+    if (ptft->chConversion == 'd' || ptft->chConversion == 'i')
+    {
+        switch (ptft->tfvw)
+        {
+        case TFVW_32:
+            if (pul->n < 0)
+            {
+                pul->n = -pul->n;
+                fNeg = 1;
+            }
+            break;
+        case TFVW_16:
+            if (pul->w < 0)
+            {
+                pul->uw = -pul->uw;
+                fNeg = 1;
+            }
+            break;
+        case TFVW_64:
+            if (pul->l < 0)
+            {
+                pul->l = -pul->l;
+                fNeg = 1;
+            }
+            break;
+        }
+    }
+
+    return fNeg;
+}
 
 __asm__(
     ".section .rodata\n\t"
