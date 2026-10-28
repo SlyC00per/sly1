@@ -133,47 +133,11 @@ uint UnRadixFromChConversion(char chConversion)
 __asm__(
     ".section .rodata\n\t"
     ".align 3\n\t"
-    "nonmatching D_0024E3D0\n\t"
-    "\n\t"
     "dlabel D_0024E3D0\n\t"
-    "    .word 0x0000002D\n\t"
-    "    .word 0x00000000\n\t"
-    "enddlabel D_0024E3D0\n\t"
-    "\n\t"
-    "nonmatching D_0024E3D8\n\t"
-    "\n\t"
-    "dlabel D_0024E3D8\n\t"
-    "    .word 0x0000002B\n\t"
-    "    .word 0x00000000\n\t"
-    "enddlabel D_0024E3D8\n\t"
-    "\n\t"
-    "nonmatching D_0024E3E0\n\t"
-    "\n\t"
-    "dlabel D_0024E3E0\n\t"
-    "    .word 0x00000020\n\t"
-    "    .word 0x00000000\n\t"
-    "enddlabel D_0024E3E0\n\t"
-    "\n\t"
-    "nonmatching D_0024E3E8\n\t"
-    "\n\t"
-    "dlabel D_0024E3E8\n\t"
-    "    .word 0x00006230\n\t"
-    "    .word 0x00000000\n\t"
-    "enddlabel D_0024E3E8\n\t"
-    "\n\t"
-    "nonmatching D_0024E3F0\n\t"
-    "\n\t"
-    "dlabel D_0024E3F0\n\t"
-    "    .word 0x00000030\n\t"
-    "    .word 0x00000000\n\t"
-    "enddlabel D_0024E3F0\n\t"
-    "\n\t"
-    "nonmatching D_0024E3F8\n\t"
-    "\n\t"
-    "dlabel D_0024E3F8\n\t"
-    "    .word 0x00007830\n\t"
-    "    .word 0x00000000\n\t"
-    "enddlabel D_0024E3F8\n\t"
+    ".globl D_0024E3D8\n\t"
+    "D_0024E3D8 = D_0024E3D0 + 8\n\t"
+    ".globl D_0024E3E0\n\t"
+    "D_0024E3E0 = D_0024E3D0 + 16\n\t"
     ".section .text\n\t"
 );
 
@@ -194,7 +158,111 @@ int CchAchFromUl(char *achDest, int cchDest, unsigned long ul, uint unRadix)
     return cch;
 }
 
-INCLUDE_ASM("asm/nonmatchings/P2/text", WriteTftUl__FP3TFTP5OSTRMUl);
+void WriteTftUl(TFT *ptft, OSTRM *postrm, unsigned long ul)
+{
+    char achzNum[65];
+    char achzPrefix[5];
+    int cchPrefix;
+    int cchZeroPad;
+    int cchNum;
+
+    if (ptft->fZeroPrecision != 0 || ptft->cchPrecision != 0)
+    {
+        ptft->fZero = 0;
+    }
+
+    if (ptft->fZeroPrecision != 0 && ul == 0)
+    {
+        cchPrefix = 0;
+        cchZeroPad = 0;
+        cchNum = 0;
+    }
+    else
+    {
+        int fNeg = FNegTftUl(ptft, (UL *)&ul);
+        cchZeroPad = ptft->cchPrecision;
+        achzPrefix[0] = '\0';
+
+        switch (ptft->chConversion)
+        {
+        case 'd':
+        case 'i':
+            if (fNeg)
+            {
+                strcpy(achzPrefix, "-");
+            }
+            else if (ptft->fPlus != 0)
+            {
+                strcpy(achzPrefix, "+");
+            }
+            else if (ptft->fSpace != 0)
+            {
+                strcpy(achzPrefix, " ");
+            }
+            cchZeroPad -= strlen(achzPrefix);
+            break;
+        case 'b':
+            if (ptft->fHash != 0)
+            {
+                strcpy(achzPrefix, "0b");
+            }
+            break;
+        case 'o':
+            if (ptft->fHash != 0)
+            {
+                strcpy(achzPrefix, "0");
+            }
+            break;
+        case 'x':
+            if (ptft->fHash != 0)
+            {
+                strcpy(achzPrefix, "0x");
+            }
+            break;
+        }
+
+        cchPrefix = strlen(achzPrefix);
+        cchNum = CchAchFromUl(achzNum, 64, ul, UnRadixFromChConversion(ptft->chConversion));
+        cchZeroPad -= cchNum;
+        if (cchZeroPad < 0)
+        {
+            cchZeroPad = 0;
+        }
+    }
+
+    achzNum[cchNum] = '\0';
+    if (ptft->fUpperize != 0)
+    {
+        UpperizePchz(achzPrefix);
+        UpperizePchz(achzNum);
+    }
+
+    int cchTotal = cchPrefix + cchZeroPad + cchNum;
+    int cchLeftPad = 0;
+    int cchRightPad = 0;
+    if (cchTotal < ptft->cchWidth)
+    {
+        int cchPad = ptft->cchWidth - cchTotal;
+        if (ptft->fMinus != 0)
+        {
+            cchRightPad = cchPad;
+        }
+        else if (ptft->fZero != 0 && cchNum != 0)
+        {
+            cchZeroPad += cchPad;
+        }
+        else
+        {
+            cchLeftPad = cchPad;
+        }
+    }
+
+    WriteOstrmChPad(postrm, ' ', cchLeftPad);
+    postrm->CbWrite(achzPrefix, cchPrefix);
+    WriteOstrmChPad(postrm, '0', cchZeroPad);
+    postrm->CbWrite(achzNum, cchNum);
+    WriteOstrmChPad(postrm, ' ', cchRightPad);
+}
 
 int ExpFirstFromG(double g)
 {

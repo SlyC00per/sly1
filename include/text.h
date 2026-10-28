@@ -98,7 +98,7 @@ void WriteTftPchz(TFT *ptft, OSTRM *postrm, char *pchz);
 int FNegTftUl(TFT *ptft, UL *pul);
 uint UnRadixFromChConversion(char chConversion);
 int CchAchFromUl(char *achDest, int cchDest, unsigned long ul, uint unRadix);
-void WriteTftUl(TFT *ptft, OSTRM *postrm, ulong ul);
+void WriteTftUl(TFT *ptft, OSTRM *postrm, unsigned long ul);
 int ExpFirstFromG(double g);
 char ChDigitFromG(double g, int expFirst, int exp);
 int CchAchFromDouble(char *achDest, int cchDest, TFT *ptft, double g);
