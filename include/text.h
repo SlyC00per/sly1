@@ -102,7 +102,7 @@ void WriteTftUl(TFT *ptft, OSTRM *postrm, unsigned long ul);
 int ExpFirstFromG(double g);
 char ChDigitFromG(double g, int expFirst, int exp);
 int CchAchFromDouble(char *achDest, int cchDest, TFT *ptft, double g);
-void WriteTftDouble(TFT *ptft, OSTRM *postrm, long g);
+void WriteTftDouble(TFT *ptft, OSTRM *postrm, double g);
 void WriteTft(TFT *ptft, OSTRM *postrm, char **pval, ulong param_4, ulong param_5, undefined8 param_6, double param_7);
 int CchOstrmPrintf(OSTRM *postrm, char *pchzFormat, va_list val);
 

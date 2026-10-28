@@ -133,11 +133,6 @@ uint UnRadixFromChConversion(char chConversion)
 __asm__(
     ".section .rodata\n\t"
     ".align 3\n\t"
-    "dlabel D_0024E3D0\n\t"
-    ".globl D_0024E3D8\n\t"
-    "D_0024E3D8 = D_0024E3D0 + 8\n\t"
-    ".globl D_0024E3E0\n\t"
-    "D_0024E3E0 = D_0024E3D0 + 16\n\t"
     ".section .text\n\t"
 );
 
@@ -400,7 +395,75 @@ int CchAchFromDouble(char *achDest, int cchDest, TFT *ptft, double g)
     return pch - achDest;
 }
 
-INCLUDE_ASM("asm/nonmatchings/P2/text", WriteTftDouble__FP3TFTP5OSTRMd);
+void WriteTftDouble(TFT *ptft, OSTRM *postrm, double g)
+{
+    char achzNum[438];
+    char achzPrefix[5];
+    int cchZeroPad = 0;
+
+    if (ptft->cchPrecision == 0 && ptft->fZeroPrecision == 0)
+    {
+        ptft->cchPrecision = 6;
+    }
+    else if (ptft->fZeroPrecision != 0 && ptft->chConversion == 'g')
+    {
+        ptft->cchPrecision = 1;
+    }
+
+    int fNeg = g < 0.0;
+    if (fNeg)
+    {
+        g = -g;
+    }
+
+    achzPrefix[0] = '\0';
+    if (fNeg)
+    {
+        strcpy(achzPrefix, "-");
+    }
+    else if (ptft->fPlus != 0)
+    {
+        strcpy(achzPrefix, "+");
+    }
+    else if (ptft->fSpace != 0)
+    {
+        strcpy(achzPrefix, " ");
+    }
+
+    int cchPrefix = strlen(achzPrefix);
+    int cchNum = CchAchFromDouble(achzNum, 437, ptft, g);
+    achzNum[cchNum] = '\0';
+    if (ptft->fUpperize != 0)
+    {
+        UpperizePchz(achzNum);
+    }
+
+    int cchTotal = cchPrefix + cchNum;
+    int cchLeftPad = 0;
+    int cchRightPad = 0;
+    if (cchTotal < ptft->cchWidth)
+    {
+        int cchPad = ptft->cchWidth - cchTotal;
+        if (ptft->fMinus != 0)
+        {
+            cchRightPad = cchPad;
+        }
+        else if (ptft->fZero != 0 && cchNum != 0)
+        {
+            cchZeroPad = cchPad;
+        }
+        else
+        {
+            cchLeftPad = cchPad;
+        }
+    }
+
+    WriteOstrmChPad(postrm, ' ', cchLeftPad);
+    postrm->CbWrite(achzPrefix, cchPrefix);
+    WriteOstrmChPad(postrm, '0', cchZeroPad);
+    postrm->CbWrite(achzNum, cchNum);
+    WriteOstrmChPad(postrm, ' ', cchRightPad);
+}
 
 __asm__(
     ".section .rodata\n\t"
