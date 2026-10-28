@@ -5378,6 +5378,7 @@ __umoddi3 = 0x1FC3D0; // type:func
 ////////////////////////////////////////////////////////////////
 // /usr/local/sce/ee/gcc/build/gcc/dp-bit.c
 ////////////////////////////////////////////////////////////////
+dpadd = 0x1FCD20; // type:func
 dpsub = 0x1FCD78; // type:func
 dpmul = 0x1FCDE0; // type:func
 dpcmp = 0x1FD308; // type:func

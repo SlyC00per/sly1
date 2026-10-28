@@ -174,26 +174,110 @@ char ChDigitFromG(double g, int expFirst, int exp)
     return s_achzNumerals[digit];
 }
 
-INCLUDE_ASM("asm/nonmatchings/P2/text", CchAchFromDouble__FPciP3TFTd);
+int CchAchFromDouble(char *achDest, int cchDest, TFT *ptft, double g)
+{
+    if ((*(ulong *)&g & 0x7FF0000000000000) == 0x7FF0000000000000)
+    {
+        strcpy(achDest, (*(ulong *)&g & 0xFFFFFFFFFFFFF) ? "(nan)" : "(inf)");
+        return strlen(achDest);
+    }
+
+    int expFirst = ExpFirstFromG(g);
+    char *pch = achDest;
+    int fENotation = ptft->chConversion == 'e';
+    if (ptft->chConversion == 'g')
+    {
+        if (expFirst < -4 || expFirst >= ptft->cchPrecision)
+        {
+            fENotation = 1;
+            ptft->cchPrecision--;
+        }
+    }
+
+    int expDecimal = fENotation ? expFirst : 0;
+    double gRound = g + (double)powf(10.0f, (float)(expDecimal - ptft->cchPrecision)) * 0.5;
+
+    int expNewFirst = ExpFirstFromG(gRound);
+    if (expFirst < ExpFirstFromG(gRound))
+    {
+        expFirst = expNewFirst;
+    }
+
+    int cchPre;
+    int expNext;
+    if (fENotation)
+    {
+        cchPre = 1;
+        expNext = expFirst;
+    }
+    else if (expFirst >= 0)
+    {
+        cchPre = expFirst + 1;
+        expNext = expFirst;
+    }
+    else
+    {
+        cchPre = 1;
+        expNext = 0;
+    }
+
+    while (cchPre-- > 0)
+    {
+        *pch++ = ChDigitFromG(gRound, expFirst, expNext--);
+    }
+
+    if (ptft->fZeroPrecision == 0)
+    {
+        *pch++ = '.';
+        int cchPost = ptft->cchPrecision;
+        while (cchPost-- > 0)
+        {
+            *pch++ = ChDigitFromG(gRound, expFirst, expNext--);
+        }
+
+        if (ptft->chConversion == 'g' && achDest < pch)
+        {
+            while (achDest < pch && pch[-1] == '0')
+            {
+                pch--;
+            }
+            if (achDest < pch && pch[-1] == '.')
+            {
+                pch--;
+            }
+        }
+    }
+
+    if (fENotation)
+    {
+        *pch++ = 'e';
+        if (expFirst < 0)
+        {
+            *pch++ = '-';
+            expFirst = -expFirst;
+        }
+        else
+        {
+            *pch++ = '+';
+        }
+
+        int nDiv = (int)powf(10.0f, 2.0f);
+        int cchPost = 2;
+        do
+        {
+            *pch++ = s_achzNumerals[expFirst / nDiv];
+            expFirst = (expFirst % nDiv) * 10;
+        } while (--cchPost >= 0);
+    }
+
+    return pch - achDest;
+}
 
 INCLUDE_ASM("asm/nonmatchings/P2/text", WriteTftDouble__FP3TFTP5OSTRMd);
 
 __asm__(
     ".section .rodata\n\t"
-    "nonmatching D_0024E468\n\t"
-    "\n\t"
-    "dlabel D_0024E468\n\t"
-    "    .word 0x6E616E28\n\t"
-    "    .word 0x00000029\n\t"
-    "enddlabel D_0024E468\n\t"
-    "\n\t"
-    "nonmatching D_0024E470\n\t"
-    "\n\t"
-    "dlabel D_0024E470\n\t"
-    "    .word 0x666E6928\n\t"
-    "    .word 0x00000029\n\t"
-    "enddlabel D_0024E470\n\t"
-    "\n\t"
+    ".align 3\n\t"
     "nonmatching D_0024E478\n\t"
     "\n\t"
     "dlabel D_0024E478\n\t"
