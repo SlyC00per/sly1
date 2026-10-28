@@ -110,7 +110,25 @@ __asm__(
     ".section .text\n\t"
 );
 
-INCLUDE_ASM("asm/nonmatchings/P2/text", UnRadixFromChConversion__Fc);
+uint UnRadixFromChConversion(char chConversion)
+{
+    switch (chConversion)
+    {
+    case 'd':
+    case 'i':
+    case 'u':
+        return 10;
+    case 'B':
+    case 'b':
+        return 2;
+    case 'o':
+        return 8;
+    case 'x':
+        return 16;
+    default:
+        return 10;
+    }
+}
 
 __asm__(
     ".section .rodata\n\t"
