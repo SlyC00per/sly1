@@ -71,7 +71,7 @@ int CchParsePchzTft(char *pchzFormat, TFT *ptft, char **pval);
 void WriteTftPchz(TFT *ptft, OSTRM *postrm, char *pchz);
 int FNegTftUl(TFT *ptft, union UL *pul); // todo: define type of pul
 uint UnRadixFromChConversion(char chConversion);
-int CchAchFromUl(char *achDest, int cchDest, ulong ul, uint unRadix);
+int CchAchFromUl(char *achDest, int cchDest, unsigned long ul, uint unRadix);
 void WriteTftUl(TFT *ptft, OSTRM *postrm, ulong ul);
 int ExpFirstFromG(double g);
 char ChDigitFromG(double g, int expFirst, int exp);

@@ -73,7 +73,22 @@ __asm__(
     ".section .text\n\t"
 );
 
-INCLUDE_ASM("asm/nonmatchings/P2/text", CchAchFromUl__FPciUlUi);
+int CchAchFromUl(char *achDest, int cchDest, unsigned long ul, uint unRadix)
+{
+    char *pchEnd = achDest + cchDest;
+    char *pch = pchEnd;
+    do
+    {
+        *--pch = s_achzNumerals[ul % unRadix];
+        ul /= unRadix;
+    } while (ul != 0 && pch >= achDest);
+    int cch = pchEnd - pch;
+    if (cch != 0 && achDest < pch)
+    {
+        CopyAb(achDest, pch, cch);
+    }
+    return cch;
+}
 
 INCLUDE_ASM("asm/nonmatchings/P2/text", WriteTftUl__FP3TFTP5OSTRMUl);
 

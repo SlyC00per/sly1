@@ -5371,6 +5371,8 @@ __main__Fv = 0x1fae18; // type:func
 // /usr/local/sce/ee/gcc/src/gcc/libgcc2.c
 ////////////////////////////////////////////////////////////////
 __floatdisf = 0x1fb6b0; // type:func
+__udivdi3 = 0x1FBE00; // type:func
+__umoddi3 = 0x1FC3D0; // type:func
 
 
 ////////////////////////////////////////////////////////////////
