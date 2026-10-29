@@ -56,7 +56,6 @@ public:
     int m_grfDecomp;
     int m_cbSpillOver;
     CProg *m_pprog;
-    TICK m_tickWait;
     int m_fd;
     int m_cbAsyncComplete;
     int m_cbAsyncRequest;

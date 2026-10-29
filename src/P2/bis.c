@@ -1,4 +1,5 @@
 #include <bis.h>
+#include <util.h>
 #include <memory.h>
 #include <989snd.h>
 #include <sdk/libcdvd.h>
@@ -41,14 +42,14 @@ CBinaryInputStream::~CBinaryInputStream()
 int CBinaryInputStream::FOpenSector(uint isector, uint cb)
 {
     m_bisk = BISK_Cd;
-    m_cbAsyncRequest = isector;
+    m_isector = isector;
     m_cbFile = cb;
     m_cbRemaining = cb;
-    m_fd = cb;
+    m_cbAsyncRemaining = cb;
     m_pbRaw = m_abSpool;
-    *(uint *)&m_tickWait = 0;
     m_cbAsyncComplete = 0;
-    *(uint *)((int)&m_tickWait + 4) = 0;
+    m_cbPartialRead = 0;
+    m_cbAsyncRequest = 0;
 
     int cbSpool = m_cbSpool;
     if (cbSpool < 0)
@@ -56,18 +57,18 @@ int CBinaryInputStream::FOpenSector(uint isector, uint cb)
         cbSpool += 0xfffff;
     }
 
-    m_cbPartialRead = 0;
+    m_cbufFill = 0;
 
-    int cbAsyncRemaining = 2;
+    int cbuf = 2;
     int shr = 20;
-    if ((cbSpool >> shr) > cbAsyncRemaining)
+    if ((cbSpool >> shr) > cbuf)
     {
-        cbAsyncRemaining = cbSpool >> shr;
+        cbuf = cbSpool >> shr;
     }
 
-    m_isector = 0;
-    m_cbAsyncRemaining = cbAsyncRemaining;
-    m_cbuf = cbAsyncRemaining - 1;
+    m_ibufMic = 0;
+    m_cbuf = cbuf;
+    m_ibufMac = cbuf - 1;
 
     return 1;
 }
@@ -90,15 +91,13 @@ void CBinaryInputStream::Close()
     {
         case BISK_Host:
         {
-            // NOTE: This is m_fd if m_tickWait is removed.
-            if (*(int *)((uchar *)&m_tickWait - 0x4) >= 0)
-                sceClose(*(int *)((uchar *)&m_tickWait - 0x4));
+            if (m_fd >= 0)
+                sceClose(m_fd);
             break;
         }
         case BISK_Cd:
         {
-            // NOTE: This is m_cbAsyncComplete if m_tickWait is removed.
-            if (STRUCT_OFFSET(this, 0x3c, int))
+            if (m_cbAsyncRequest)
             {
                 if (m_grfbis & 0x2)
                 {
@@ -124,12 +123,16 @@ void CBinaryInputStream::Close()
 
 void CBinaryInputStream::DecrementCdReadLimit(int cb)
 {
-    m_fd -= cb;
+    m_cbAsyncRemaining -= cb;
 }
 
 INCLUDE_ASM("asm/nonmatchings/P2/bis", PumpCd__18CBinaryInputStream);
 
-INCLUDE_ASM("asm/nonmatchings/P2/bis", PumpHost__18CBinaryInputStream);
+void CBinaryInputStream::PumpHost()
+{
+    m_pbRaw = m_abSpool;
+    m_cbRaw = sceRead(m_fd, m_pbRaw, NMin(0x8000, m_cbSpool, m_cbRemaining));
+}
 
 void CBinaryInputStream::Pump()
 {

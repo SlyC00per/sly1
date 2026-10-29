@@ -61,6 +61,16 @@ static inline float GLerp(float a, float b, float t)
     return (1.0f - t) * a + t * b;
 }
 
+static inline int NMin(int nA, int nB)
+{
+    return (nA < nB) ? nA : nB;
+}
+
+static inline int NMin(int nA, int nB, int nC)
+{
+    return (nA < nB) ? NMin(nA, nC) : NMin(nB, nC);
+}
+
 /**
  * @brief Limits for a float.
  */
