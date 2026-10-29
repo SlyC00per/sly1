@@ -1,5 +1,5 @@
 
-# 🦝 Sly Cooper and the Thievius Raccoonus
+# ✨🦝 Sly Cooper and the Thievius Raccoonus (AI-Assisted)
 
 <!-- Build status shield -->
 [build-url]:https://github.com/SlyC00per/sly1/actions/workflows/build.yml
