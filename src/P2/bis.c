@@ -360,7 +360,32 @@ void CBinaryInputStream::ReadMatrix4(MATRIX4 *pmat)
 
 INCLUDE_ASM("asm/nonmatchings/P2/bis", ReadGeom__18CBinaryInputStreamP4GEOM);
 
-INCLUDE_ASM("asm/nonmatchings/P2/bis", ReadBspc__18CBinaryInputStreamP4GEOMP4BSPC);
+void CBinaryInputStream::ReadBspc(GEOM *pgeom, BSPC *pbspc)
+{
+    pbspc->cbsp = U16Read();
+    pbspc->cbspFull = U16Read();
+    pbspc->absp = (BSP *)PvAllocSwClearImpl(pbspc->cbsp * sizeof(BSP));
+
+    for (int ibsp = 0; ibsp < pbspc->cbsp; ibsp++)
+    {
+        BSP *pbsp = &pbspc->absp[ibsp];
+
+        int isurf = U16Read();
+        pbsp->psurf = &pgeom->asurf[isurf];
+
+        int ibspNeg = U16Read();
+        if ((ushort)ibspNeg != 0xffff)
+        {
+            pbsp->pbspNeg = &pbspc->absp[ibspNeg];
+        }
+
+        int ibspPos = U16Read();
+        if ((ushort)ibspPos != 0xffff)
+        {
+            pbsp->pbspPos = &pbspc->absp[ibspPos];
+        }
+    }
+}
 
 void CBinaryInputStream::ReadVbsp(int *pcvbsp, VBSP **pavbsp)
 {

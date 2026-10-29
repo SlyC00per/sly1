@@ -243,9 +243,16 @@ public:
      * @brief Reads geometry data from the stream.
      *
      * @param pgeom Pointer to the geometry data structure to store the data.
-     * @param pbspb Pointer to a BSP tree (?).
      */
-    void ReadGeom(GEOM *pgeom, BSPC *pbspc);
+    void ReadGeom(GEOM *pgeom);
+
+    /**
+     * @brief Reads BSP tree data from the stream.
+     *
+     * @param pgeom Pointer to the geometry data structure.
+     * @param pbspc Pointer to the BSP container to store the data.
+     */
+    void ReadBspc(GEOM *pgeom, BSPC *pbspc);
 
     /**
      * @brief Reads the given number of VBSPs from the stream.
