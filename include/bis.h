@@ -70,13 +70,11 @@ public:
     /**
      * @brief Constructs a new CBinaryInputStream.
      *
-     * @param pvSpool Pointer to data.
      * @param cbSpool Size of data in bytes.
+     * @param pvSpool Pointer to data.
      * @param grfbis  Flags.
-     *
-     * @todo Implement this constructor.
      */
-    CBinaryInputStream(void *pvSpool, int cbSpool, GRFBIS grfbis);
+    CBinaryInputStream(int cbSpool, void *pvSpool, GRFBIS grfbis);
 
     /**
      * @brief Destroys the CBinaryInputStream.

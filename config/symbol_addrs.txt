@@ -1092,7 +1092,7 @@ _GLOBAL_$I$InitBei__FP3BEIP3CLQffi = 0x137270; // type:func
 ////////////////////////////////////////////////////////////////
 // P2/bis.c
 ////////////////////////////////////////////////////////////////
-__18CBinaryInputStreamPvii = 0x137290; // type:func
+__18CBinaryInputStreamiPvi = 0x137290; // type:func
 _$_18CBinaryInputStream = 0x1372E0; // type:func
 FOpenSector__18CBinaryInputStreamUiUi = 0x137328; // type:func
 OpenMemory__18CBinaryInputStreamiPv = 0x137398; // type:func

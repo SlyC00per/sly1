@@ -99,7 +99,7 @@ void SetLoDefaults(LO *plo)
             continue;
         }
 
-        CBinaryInputStream bis(NULL, 0, 0);
+        CBinaryInputStream bis(0, NULL, 0);
         bis.OpenMemory(4, &peopid->optdat);
         LoadOptionFromBrx(plo, peopid, &bis);
     }

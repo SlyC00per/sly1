@@ -5,34 +5,19 @@
 #include <sdk/libcdvd.h>
 #include <lib/libkernl/filestub.h>
 
-INCLUDE_ASM("asm/nonmatchings/P2/bis", __18CBinaryInputStreamPvii);
-#ifdef SKIP_ASM
-/**
- * @todo 92.85% match. Class fields might be incorrect,
- * but they seem to be used correctly elsewhere?
- * https://decomp.me/scratch/CpeOx
- */
-CBinaryInputStream::CBinaryInputStream(void *pvSpool, int cbSpool, GRFBIS grfbis)
+CBinaryInputStream::CBinaryInputStream(int cbSpool, void *pvSpool, GRFBIS grfbis)
 {
-    int aligned = (cbSpool + 0x3f) & ~0x3f;
-    int padding = (aligned - cbSpool);
-
     m_bisk = BISK_Nil;
     m_grfbis = grfbis;
-
-    m_abSpool = (byte *)pvSpool - padding;
-    m_cbSpool = aligned;
-
-    // m_pbRaw = 0;
-    m_pb = 0;
-    m_cbRaw = 0;
-    m_cb = 0;
-    m_pprog = 0;
+    m_pb = m_pbRaw = NULL;
+    m_cb = m_cbRaw = 0;
+    m_pprog = NULL;
     m_grfDecomp = 0;
     m_cbSpillOver = 0;
-    m_cbFile = 0;
+
+    m_abSpool = (byte *)(((int)pvSpool + 0x3f) & ~0x3f);
+    m_cbSpool = cbSpool - ((int)m_abSpool - (int)pvSpool);
 }
-#endif
 
 CBinaryInputStream::~CBinaryInputStream()
 {
