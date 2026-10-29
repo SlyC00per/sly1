@@ -148,59 +148,49 @@ void CBinaryInputStream::Pump()
 
 INCLUDE_ASM("asm/nonmatchings/P2/bis", Decompress__18CBinaryInputStream);
 
-INCLUDE_ASM("asm/nonmatchings/P2/bis", Read__18CBinaryInputStreamiPv);
-#ifdef SKIP_ASM
-/**
- * @brief Reads a certain number of bytes from the stream.
- *
- * @param cb Count of bytes to read.
- * @param pv Pointer to the memory destination.
- *
- * @todo  74.27% matched
- */
 void CBinaryInputStream::Read(int cb, void *pv)
 {
-    uint uVar1;
-    uint cb_00;
+    byte *pb = (byte *)pv;
 
-    if ((-1 < m_cb) && (0 < cb)) {
-        for (int i = 0; i < cb; i++)
+    if (m_cb < 0)
+        return;
+
+    while (cb > 0)
+    {
+        if (m_cb == 0)
         {
-            uVar1 = m_cb;
-            if (uVar1 == 0) {
-                if ((m_grfbis & 4U) == 0) {
-                    Decompress();
-                    Pump();
-                    m_cb = m_cbRaw;
-                    m_pb = m_pbRaw;
-                    m_pbRaw = m_pbRaw + m_cbRaw;
-                    m_cbRaw = 0;
-                    uVar1 = m_cb;
-                }
-                else {
-                    uVar1 = m_cb;
-                }
-                if (uVar1 == 0) {
-                    m_cb = -1;
-                    return;
-                }
+            if (m_grfbis & 0x4)
+            {
+                Decompress();
             }
-            cb_00 = cb;
-            if ((int)uVar1 <= cb) {
-                cb_00 = uVar1;
-            }
-            if (pv != NULL) {
-                byte* pb = reinterpret_cast<byte*>(pv);
-                CopyAb(pb, m_pb, cb_00);
-                pv = reinterpret_cast<void*>(pb + cb_00);
+            else
+            {
+                Pump();
+                m_cb = m_cbRaw;
+                m_pb = m_pbRaw;
+                m_pbRaw += m_cbRaw;
+                m_cbRaw = 0;
             }
 
-            m_pb = m_pb + cb_00;
-            m_cb = m_cb - cb_00;
+            if (m_cb == 0)
+            {
+                m_cb = -1;
+                return;
+            }
         }
+
+        int cbCopy = NMin(cb, m_cb);
+        if (pb)
+        {
+            CopyAb(pb, m_pb, cbCopy);
+            pb += cbCopy;
+        }
+
+        m_pb += cbCopy;
+        m_cb -= cbCopy;
+        cb -= cbCopy;
     }
 }
-#endif
 
 void CBinaryInputStream::Align(int n)
 {
