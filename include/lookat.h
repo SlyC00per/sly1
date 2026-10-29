@@ -18,7 +18,7 @@ struct ACTLA : public ACT
 {
     int fUseTarget;
     ALO *paloTarget;
-    VECTOR posTargetLocal;
+    VECTOR posTargetLocal __attribute__((aligned(16)));
     float sIgnore;
     /* 0x44 */ int nPriorityEnabled;
     /* 0x48 */ int nPriorityDisabled;

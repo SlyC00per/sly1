@@ -548,6 +548,10 @@ void SetAloLookAtDisabledPriority(ALO *palo, int nPriority);
 
 void GetAloLookAtDisabledPriority(ALO *palo, int *pnPriority);
 
+void FUN_0012a8b8(ALO *palo);
+
+void FUN_0012a8c8(ALO *palo);
+
 void SetAloRotationMatchesVelocity(ALO *palo, float uBank, float dtPredict, ACK ackRot);
 
 TARGET *PtargetEnsureAlo(ALO *palo);

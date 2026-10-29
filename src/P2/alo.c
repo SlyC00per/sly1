@@ -501,10 +501,13 @@ INCLUDE_ASM("asm/nonmatchings/P2/alo", FUN_0012a888);
 
 void FUN_0012a8b8(ALO *palo)
 {
-    STRUCT_OFFSET(palo->pactla, 0x4c, int) = 0; // palo->pactla->fPaused
+    palo->pactla->fPaused = 0;
 }
 
-INCLUDE_ASM("asm/nonmatchings/P2/alo", FUN_0012a8c8);
+void FUN_0012a8c8(ALO *palo)
+{
+    palo->pactla->fPaused = 1;
+}
 
 INCLUDE_ASM("asm/nonmatchings/P2/alo", SetAloRotationMatchesVelocity__FP3ALOff3ACK);
 

@@ -15,16 +15,19 @@ struct ALO;
 
 typedef int GRFRA;
 
+
 /**
  * @brief Action.
- * @todo Implement the struct.
  */
 struct ACT
 {
     /* 0x00 */ VTACT *pvtact;
     /* 0x04 */ ALO *palo;
     /* 0x08 */ DLE dleAlo;
-    /* 0x10 */ STRUCT_PADDING(1);
+    /* 0x10 */ byte ackPos;
+    /* 0x11 */ byte ackRot;
+    /* 0x12 */ byte ackScale;
+    /* 0x13 */ byte ackPose;
     /* 0x14 */ int nPriority;
     /* 0x18 */ float tMatch;
 };
